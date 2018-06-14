@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "virtualMachineName": {
+            "value": "imagefactory"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "adminUsername": {
+            "value": "sysadm"
+        },
+        "virtualNetworkName": {
+            "value": "WMUGSaturday-vnet"
+        },
+        "networkInterfaceName": {
+            "value": "imagefactory441"
+        },
+        "networkSecurityGroupName": {
+            "value": "imagefactory-nsg"
+        },
+        "adminPassword": {
+            "value": null
+        },
+        "addressPrefix": {
+            "value": "10.1.0.0/24"
+        },
+        "subnetName": {
+            "value": "default"
+        },
+        "subnetPrefix": {
+            "value": "10.1.0.0/24"
+        },
+        "publicIpAddressName": {
+            "value": "imagefactory-ip"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        },
+        "autoShutdownStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "19:00"
+        },
+        "autoShutdownTimeZone": {
+            "value": "W. Europe Standard Time"
+        },
+        "autoShutdownNotificationStatus": {
+            "value": "Disabled"
+        }
+    }
+}
