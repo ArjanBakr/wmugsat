@@ -6,25 +6,25 @@
             "value": "westeurope"
         },
         "virtualMachineName": {
-            "value": "imagefactory"
+            "value": "ImageBuilder"
         },
         "virtualMachineSize": {
             "value": "Standard_D4s_v3"
         },
         "adminUsername": {
-            "value": "sysadm"
+            "value": "wmugadm"
         },
         "virtualNetworkName": {
-            "value": "WMUGSaturday-vnet"
+            "value": "WMUGSaturday-ImageBuilder-vnet"
         },
         "networkInterfaceName": {
-            "value": "imagefactory441"
+            "value": "imagebuilder-nic01"
         },
         "networkSecurityGroupName": {
-            "value": "imagefactory-nsg"
+            "value": "ImageBuilder-nsg"
         },
         "adminPassword": {
-            "value": null
+            "value": "wmugSat23062018%"
         },
         "addressPrefix": {
             "value": "10.1.0.0/24"
@@ -36,7 +36,7 @@
             "value": "10.1.0.0/24"
         },
         "publicIpAddressName": {
-            "value": "imagefactory-ip"
+            "value": "ImageBuilder-pip"
         },
         "publicIpAddressType": {
             "value": "Dynamic"

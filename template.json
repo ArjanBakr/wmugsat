@@ -58,7 +58,7 @@
         }
     },
     "variables": {
-        "vnetId": "[resourceId('WMUGSaturday','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "vnetId": "[resourceId('WMUGSaturday-ImageBuilder','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
     },
     "resources": [
@@ -91,11 +91,19 @@
                     },
                     "osDisk": {
                         "createOption": "fromImage",
+                        "name": "[concat(parameters('virtualMachineName'), '-OSDisk')]",
                         "managedDisk": {
                             "storageAccountType": "Premium_LRS"
                         }
                     },
-                    "dataDisks": []
+                    "dataDisks": [
+                        {
+                            "name": "[concat(parameters('virtualMachineName'), '-DataDisk01')]",
+                            "diskSizeGB": 300,
+                            "lun": 0,
+                            "createOption":"Empty"
+                        }
+                    ]
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -169,14 +177,14 @@
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIpAddress": {
-                                "id": "[resourceId('WMUGSaturday','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
+                                "id": "[resourceId('WMUGSaturday-ImageBuilder','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
                             }
                         }
                     }
                 ],
                 "enableAcceleratedNetworking": true,
                 "networkSecurityGroup": {
-                    "id": "[resourceId('WMUGSaturday', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[resourceId('WMUGSaturday-ImageBuilder', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             }
         },
