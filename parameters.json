@@ -15,7 +15,7 @@
             "value": "wmugadm"
         },
         "virtualNetworkName": {
-            "value": "WMUGSaturday-ImageBuilder-vnet"
+            "value": "ImageBuilder-vnet"
         },
         "networkInterfaceName": {
             "value": "imagebuilder-nic01"
@@ -24,7 +24,12 @@
             "value": "ImageBuilder-nsg"
         },
         "adminPassword": {
-            "value": "wmugSat23062018%"
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/b713f6ae-aacc-4cdd-99d2-5ead6a50ef1c/resourceGroups/wmugsat-ops-rg01/providers/Microsoft.KeyVault/vaults/wmugsat-kv-01"
+                },
+                "secretName": "vmAdminPassword"
+            }
         },
         "addressPrefix": {
             "value": "10.1.0.0/24"

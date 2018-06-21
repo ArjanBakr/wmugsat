@@ -58,7 +58,7 @@
         }
     },
     "variables": {
-        "vnetId": "[resourceId('WMUGSaturday-ImageBuilder','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "vnetId": "[resourceId('wmugsat-vm-rg01','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
     },
     "resources": [
@@ -177,14 +177,14 @@
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIpAddress": {
-                                "id": "[resourceId('WMUGSaturday-ImageBuilder','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
+                                "id": "[resourceId('wmugsat-vm-rg01','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
                             }
                         }
                     }
                 ],
                 "enableAcceleratedNetworking": true,
                 "networkSecurityGroup": {
-                    "id": "[resourceId('WMUGSaturday-ImageBuilder', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[resourceId('wmugsat-vm-rg01', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             }
         },
