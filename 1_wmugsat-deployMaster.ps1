@@ -21,8 +21,8 @@ New-AzureRmResourceGroup -Name $opsResourceGroupName -Location $resourceGroupLoc
 $vault = New-AzureRmKeyVault -VaultName $keyvaultName -ResourceGroupName $opsResourceGroupName -Location $resourceGroupLocation -EnabledForTemplateDeployment
 
 #copy the Resource ID of the vault:
-<paste here>
-/subscriptions/b713f6ae-aacc-4cdd-99d2-5ead6a50ef1c/resourceGroups/wmugsat-ops-rg01/providers/Microsoft.KeyVault/vaults/wmugsat-kv-01
+$vault.ResourceID
+#<paste result of command here>
 
 #add local admin password to keyvault
 $adminUserName = 'wmugadm'
@@ -37,7 +37,7 @@ $secret = Set-AzureKeyVaultSecret -VaultName $keyvaultName -Name 'vmAdminPasswor
 
 
 #Deploy Virtual Machine
-. .\deploy.ps1 -subscriptionId $subscriptionID -resourceGroupName $vmResourceGroupName -resourceGroupLocation $resourceGroupLocation -deploymentName $deploymentName
+. .\deploy.ps1 -subscriptionId $subscriptionID -resourceGroupName $vmResourceGroupName -resourceGroupLocation $resourceGroupLocation -deploymentName $deploymentName -keyVault $vault -adminName $adminUserName
 
 
 

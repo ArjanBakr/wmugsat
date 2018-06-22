@@ -1,54 +1,70 @@
 <#
- .SYNOPSIS
+    .SYNOPSIS
     Deploys a template to Azure
 
- .DESCRIPTION
+    .DESCRIPTION
     Deploys an Azure Resource Manager template
 
- .PARAMETER subscriptionId
+    .PARAMETER subscriptionId
     The subscription id where the template will be deployed.
 
- .PARAMETER resourceGroupName
+    .PARAMETER resourceGroupName
     The resource group where the template will be deployed. Can be the name of an existing or a new resource group.
 
- .PARAMETER resourceGroupLocation
+    .PARAMETER resourceGroupLocation
     Optional, a resource group location. If specified, will try to create a new resource group in this location. If not specified, assumes resource group is existing.
 
- .PARAMETER deploymentName
+    .PARAMETER deploymentName
     The deployment name.
 
- .PARAMETER templateFilePath
+    .PARAMETER templateFilePath
     Optional, path to the template file. Defaults to template.json.
 
- .PARAMETER parametersFilePath
+    .PARAMETER parametersFilePath
     Optional, path to the parameters file. Defaults to parameters.json. If file is not found, will prompt for parameter values based on template.
+
+    .PARAMETER keyVault
+    Required, Keyvault object.
+
+    .PARAMETER keyVault
+    Optional, Admin user account name.
+
+
+
 #>
 
 param(
- [Parameter(Mandatory=$True)]
- [string]
- $subscriptionId,
+  [Parameter(Mandatory=$True)]
+  [string]
+  $subscriptionId,
 
- [Parameter(Mandatory=$True)]
- [string]
- $resourceGroupName,
+  [Parameter(Mandatory=$True)]
+  [string]
+  $resourceGroupName,
 
- [string]
- $resourceGroupLocation,
+  [string]
+  $resourceGroupLocation,
 
- [Parameter(Mandatory=$True)]
- [string]
- $deploymentName,
+  [Parameter(Mandatory=$True)]
+  [string]
+  $deploymentName,
 
- [string]
- $templateFilePath = "template.json",
+  [string]
+  $templateFilePath = "template.json",
 
- [string]
- $parametersFilePath = "parameters.json"
+  [string]
+  $parametersFilePath = "parameters.json",
+
+  [Parameter(Mandatory=$True)]
+  $keyVault,
+
+  [string]
+  $adminName = "wmugadmin"
+
 )
 
 <#
-.SYNOPSIS
+    .SYNOPSIS
     Registers RPs
 #>
 Function RegisterRP {
@@ -98,10 +114,56 @@ else{
     Write-Host "Using existing resource group '$resourceGroupName'";
 }
 
-# Start the deployment
-Write-Host "Starting deployment...";
-if(Test-Path $parametersFilePath) {
-    New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath;
-} else {
-    New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath;
+$vmName = "ImageBuilder"
+$adminUserName = $adminName
+$vault = $keyVault
+$adminSecret = Get-AzureKeyVaultSecret -VaultName $vault.VaultName -Name 'vmAdminPassword'
+$adminPassword = ($adminSecret.SecretValueText | ConvertTo-SecureString -AsPlainText -Force)
+
+$params = [ordered]@{
+    virtualMachineName = $vmName;
+    virtualMachineSize = "Standard_D4s_v3";
+    adminUsername = $adminUserName;
+    virtualNetworkName = "$vmName-vnet";
+    networkInterfaceName = "$vmName-nic01";
+    networkSecurityGroupName = "$vmName-nsg";
+    addressPrefix = "10.1.0.0/24";
+    subnetName = "default";
+    subnetPrefix = "10.1.0.0/24";
+    publicIpAddressName = "$vmName-pip";
+    publicIpAddressType = "Dynamic";
+    publicIpAddressSku = "Basic";
+    autoShutdownStatus = "Enabled";
+    autoShutdownTime = "17:00";
+    autoShutdownTimeZone = "W. Europe Standard Time";
+    autoShutdownNotificationStatus = "Disabled";
+    location = "westeurope";
+    networkResourceGroupName = $resourceGroupName;
 }
+
+$params.Add("adminPassword", $adminPassword)
+
+#resourceGroupName = $resourceGroupName;
+
+Write-Host "Starting deployment...";
+
+try {
+    $Deployment = New-AzureRmResourceGroupDeployment `
+        -Name                        $deploymentName `
+        -ResourceGroupName           $resourceGroupName `
+        -TemplateFile                $templateFilePath `
+        -TemplateParameterObject     $params `
+        -Mode                        incremental `
+        -Force `
+        -Verbose
+} catch { throw $_ }
+
+
+
+# Start the deployment
+#Write-Host "Starting deployment...";
+#if(Test-Path $parametersFilePath) {
+#    New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath;
+#} else {
+#    New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath;
+#}
