@@ -3,16 +3,19 @@
 ##STEP 1##
 
 Set-ExecutionPolicy bypass -scope Process -Force
-Install-PackageProvider -Name NuGet -Force
-Install-module -Name AzureRM -verbose -force -AllowClobber
+#Install-PackageProvider -Name NuGet -Force
+#Install-module -Name AzureRM -verbose -force -AllowClobber
+Install-module -Name AzureRM -verbose
 
+#restart Virsoft Student VM first before continuing!
+#Password is on PowerPoint Slide
 
 $tenantName = '<your tenant name goes here>'
 $vmResourceGroupName = 'wmugsat-vm-rg01'
 $opsResourceGroupName = 'wmugsat-ops-rg01'
 $resourceGroupLocation = 'West Europe'
 $deploymentName = 'ImageBuilder'
-$keyvaultName = "wmugsat-kv-01"
+$keyvaultName = "wmugsat-kv-<studentnumber>"
 
 Login-AzureRmAccount
 
