@@ -10,12 +10,12 @@ Install-module -Name AzureRM -verbose
 #restart Virsoft Student VM first before continuing!
 #Password is on PowerPoint Slide
 
-$tenantName = '<your tenant name goes here>'
+$tenantName = 'Azure Lab'
 $vmResourceGroupName = 'wmugsat-vm-rg01'
 $opsResourceGroupName = 'wmugsat-ops-rg01'
 $resourceGroupLocation = 'West Europe'
 $deploymentName = 'ImageBuilder'
-$keyvaultName = "wmugsat-kv-<studentnumber>"
+$keyvaultName = "wmugsat-kv-$(get-date -Format ddMMhhmmss)"
 
 Login-AzureRmAccount
 
